@@ -22,7 +22,8 @@
     <table>
       <tr>
         <th colspan="2">Institution</th>
-        <th>Map count</th>
+        <th>Manifests count</th>
+        <th>Images count</th>
       </tr>
       {% for org in section.orgs %}
       <tr>
@@ -38,7 +39,8 @@
             <span>{{ org.name }}</span>
           {% endif %}
         </td>
-        <td></td>
+        <td><a href="{{org.id}}/manifests" target="_blank">{{section.manifest_counts[org.slug]}}</a></td>
+        <td><a href="{{org.id}}/images" target="_blank">{{section.image_count[org.slug]}}</a></td>
       </tr>
       {% endfor %}
     </table>

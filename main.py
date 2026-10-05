@@ -27,6 +27,30 @@ def fetch_organizations(plan):
     return sorted(orgs, key=lambda o: o.get("name", "").lower())
 
 
+def count_manifests(orgs):
+    manifests = {}
+    images = {}
+    for org in orgs:
+        req = urllib.request.Request(
+                f"{org['id']}/manifests",
+                headers={"Accept": "application/json", "User-Agent": "iiif-allmaps"},
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            manifest = json.load(resp)
+
+            manifests[org['slug']] = len(manifest)
+
+        req = urllib.request.Request(
+                f"{org['id']}/images",
+                headers={"Accept": "application/json", "User-Agent": "iiif-allmaps"},
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            manifest = json.load(resp)
+
+            images[org['slug']] = len(manifest)
+
+    return (manifests,images)
+
 def render_page(sections):
     env = Environment(
         loader=FileSystemLoader(TEMPLATE_DIR),
@@ -57,13 +81,11 @@ def main():
 
     sections = []
     for plan, title in PLANS:
-        try:
-            orgs = fetch_organizations(plan)
-        except Exception as e:
-            print(f"Failed to fetch {plan} organizations: {e}", file=sys.stderr)
-            return 1
+        orgs = fetch_organizations(plan)
+        (man_count, img_count) = count_manifests(orgs)
+
         print(f"Fetched {len(orgs)} {plan} organizations")
-        sections.append({"title": title, "orgs": orgs})
+        sections.append({"title": title, "orgs": orgs, "manifest_counts": man_count, "image_count": img_count})
 
     out_dir = Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
