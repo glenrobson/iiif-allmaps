@@ -16,6 +16,6 @@ python main.py --serve   # build, then preview at http://127.0.0.1:8000/
 
 ## Publishing
 
-The site is built and deployed by the **Build site** workflow ([.github/workflows/build-site.yml](.github/workflows/build-site.yml)). Run it from the repository's **Actions** tab → **Build site** → **Run workflow**.
+The site is built and deployed by the **Build site** workflow ([.github/workflows/build-site.yml](.github/workflows/build-site.yml)). It runs automatically on every push to `main`, and can also be run manually from the repository's **Actions** tab → **Build site** → **Run workflow**.
 
 One-time setup: in **Settings → Pages**, set **Source** to **GitHub Actions**.
