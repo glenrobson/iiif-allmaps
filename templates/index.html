@@ -3,31 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Allmaps Partners</title>
+  <title>Allmaps institutions</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; color: #222; }
     h2 small { font-weight: normal; color: #666; }
-    table { list-style: none; padding: 0; width: 700px; }
-    td { padding: 5px 15px 10px 15px ; border-bottom: 1px solid #eee; }
+    table { border-collapse: collapse; width: 100%; }
+    th { text-align: left; }
+    th, td { padding: .5rem; border-bottom: 1px solid #eee; }
+    th:last-child, td:last-child { text-align: right; }
     td img { width: 25px; height: 25px; object-fit: contain; }
+    .logo { width: 25px; }
     a { color: #0b5cad; }
     footer { margin-top: 2rem; color: #666; font-size: .9rem; }
   </style>
 </head>
 <body>
-  <h1>Allmaps Partners</h1>
+  <h1>Allmaps institutions</h1>
+  <p>Georeference annotations by IIIF image service host. Each map in the Allmaps Open Data export produces one annotation.</p>
   {% for section in sections %}
   <section>
     <h2>{{ section.title }} <small>({{ section.orgs | length }})</small></h2>
+    {% if section.description %}<p>{{ section.description }}</p>{% endif %}
     <table>
-      <tr>
-        <th colspan="2">Institution</th>
-        <th>Manifests count</th>
-        <th>Images count</th>
-      </tr>
+      <thead><tr><th colspan="2" scope="col">Institution or host</th><th scope="col">Annotations</th></tr></thead>
+      <tbody>
       {% for org in section.orgs %}
       <tr>
-        <td width="25px;">
+        <td class="logo">
           {% if org.logo %}
             <img src="{{ org.logo }}" alt="" loading="lazy">
           {% endif %}
@@ -39,13 +41,13 @@
             <span>{{ org.name }}</span>
           {% endif %}
         </td>
-        <td><a href="{{org.id}}/manifests" target="_blank">{{section.manifest_counts[org.slug]}}</a></td>
-        <td><a href="{{org.id}}/images" target="_blank">{{section.image_count[org.slug]}}</a></td>
+        <td>{{ org.annotation_count }}</td>
       </tr>
       {% endfor %}
+      </tbody>
     </table>
   </section>
   {% endfor %}
-  <footer>Data from <a href="https://api.allmaps.org/organizations">api.allmaps.org</a>. Generated {{ generated }}.</footer>
+  <footer>Institutions from the <a href="https://api.allmaps.org/organizations">Allmaps API</a>; annotation counts from <a href="https://files.allmaps.org/maps.ndjson">Allmaps Open Data</a>. Generated {{ generated }}.</footer>
 </body>
 </html>
